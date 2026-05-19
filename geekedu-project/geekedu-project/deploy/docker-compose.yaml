@@ -1,0 +1,135 @@
+services:
+  # MySQL数据库
+  mysql:
+    image: mysql:8.0
+    container_name: geekedu-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: geekedu
+      TZ: Asia/Shanghai
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - geekedu-network
+    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  # Redis缓存
+  redis:
+    image: redis:7-alpine
+    container_name: geekedu-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - geekedu-network
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Logic Server (gRPC)
+  logic-server:
+    build:
+      context: ..
+      dockerfile: logic-server/Dockerfile
+    container_name: geekedu-logic-server
+    ports:
+      - "50051:50051"
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - geekedu-network
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: root
+      DB_NAME: geekedu
+      HEALTH_PORT: 50052
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      OSS_ENDPOINT: ${OSS_ENDPOINT:-oss-cn-hangzhou.aliyuncs.com}
+      OSS_ACCESS_KEY_ID: ${OSS_ACCESS_KEY_ID:-}
+      OSS_ACCESS_KEY_SECRET: ${OSS_ACCESS_KEY_SECRET:-}
+      OSS_BUCKET_NAME: ${OSS_BUCKET_NAME:-}
+    healthcheck:
+      test: [ "CMD-SHELL", "wget -q -O - http://localhost:50052/healthz || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+    restart: unless-stopped
+
+  # Web Server (Gin)
+  web-server:
+    build:
+      context: ..
+      dockerfile: web-server/Dockerfile
+    container_name: geekedu-web-server
+    ports:
+      - "8080:8080"
+    depends_on:
+      logic-server:
+        condition: service_healthy
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - geekedu-network
+    environment:
+      GRPC_SERVER: logic-server:50051
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: root
+      DB_NAME: geekedu
+      OSS_ENDPOINT: ${OSS_ENDPOINT:-oss-cn-hangzhou.aliyuncs.com}
+      OSS_ACCESS_KEY_ID: ${OSS_ACCESS_KEY_ID:-}
+      OSS_ACCESS_KEY_SECRET: ${OSS_ACCESS_KEY_SECRET:-}
+      OSS_BUCKET_NAME: ${OSS_BUCKET_NAME:-}
+    healthcheck:
+      test: [ "CMD-SHELL", "wget -q -O - http://localhost:8080/healthz || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+    restart: unless-stopped
+
+  # Nginx + Frontend
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+    container_name: geekedu-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      web-server:
+        condition: service_healthy
+    networks:
+      - geekedu-network
+    restart: unless-stopped
+
+networks:
+  geekedu-network:
+    driver: bridge
+
+volumes:
+  mysql-data:
+  redis-data:

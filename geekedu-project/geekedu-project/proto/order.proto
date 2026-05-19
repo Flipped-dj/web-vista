@@ -1,0 +1,100 @@
+syntax = "proto3";
+
+package geekedu;
+option go_package = "./pb";
+
+// 订单服务
+service OrderService {
+  rpc CreateOrder(CreateOrderRequest) returns (CreateOrderResponse);
+  rpc PayOrder(PayOrderRequest) returns (PayOrderResponse);
+  rpc GetOrderList(GetOrderListRequest) returns (GetOrderListResponse);
+  rpc GetAllOrders(GetAllOrdersRequest) returns (GetAllOrdersResponse);
+  rpc CheckPurchase(CheckPurchaseRequest) returns (CheckPurchaseResponse);
+}
+
+message CreateOrderRequest {
+  int64 userId = 1;
+  int64 courseId = 2;
+}
+
+message CreateOrderResponse {
+  int32 code = 1;
+  string message = 2;
+  string orderNo = 3;
+  double amount = 4;
+}
+
+message PayOrderRequest {
+  string orderNo = 1;
+  int32 payType = 2;
+}
+
+message PayOrderResponse {
+  int32 code = 1;
+  string message = 2;
+}
+
+message GetOrderListRequest {
+  int64 userId = 1;
+  int32 pageNum = 2;
+  int32 pageSize = 3;
+}
+
+message GetOrderListResponse {
+  int32 code = 1;
+  string message = 2;
+  repeated OrderInfo list = 3;
+  int64 total = 4;
+}
+
+// 管理员获取所有订单
+message GetAllOrdersRequest {
+  int32 pageNum = 1;
+  int32 pageSize = 2;
+  int32 status = 3;  // 可选：按状态筛选
+}
+
+message GetAllOrdersResponse {
+  int32 code = 1;
+  string message = 2;
+  repeated OrderDetailInfo list = 3;
+  int64 total = 4;
+  double totalIncome = 5;  // 总收入（已支付订单金额）
+}
+
+message OrderInfo {
+  int64 id = 1;
+  string orderNo = 2;
+  int64 userId = 3;
+  int64 courseId = 4;
+  double amount = 5;
+  int32 payType = 6;
+  int32 status = 7;
+  string payTime = 8;
+  string createTime = 9;
+}
+
+// 包含用户名和课程名的订单详情
+message OrderDetailInfo {
+  int64 id = 1;
+  string orderNo = 2;
+  int64 userId = 3;
+  string username = 4;
+  int64 courseId = 5;
+  string courseTitle = 6;
+  double amount = 7;
+  int32 payType = 8;
+  int32 status = 9;
+  string payTime = 10;
+  string createTime = 11;
+}
+
+// 检查购买状态
+message CheckPurchaseRequest {
+  int64 userId = 1;
+  int64 courseId = 2;
+}
+
+message CheckPurchaseResponse {
+  bool purchased = 1;
+}

@@ -1,0 +1,248 @@
+syntax = "proto3";
+
+package geekedu;
+option go_package = "./pb";
+
+// 课程服务
+service CourseService {
+  rpc GetCourseList(GetCourseListRequest) returns (GetCourseListResponse);
+  rpc GetCourseDetail(GetCourseDetailRequest) returns (GetCourseDetailResponse);
+  rpc GetCategoryTree(GetCategoryTreeRequest) returns (GetCategoryTreeResponse);
+  rpc GetVideoPlayURL(GetVideoPlayURLRequest) returns (GetVideoPlayURLResponse);
+  // 讲师接口
+  rpc CreateCourse(CreateCourseRequest) returns (CreateCourseResponse);
+  rpc UpdateCourse(UpdateCourseRequest) returns (UpdateCourseResponse);
+  rpc DeleteCourse(DeleteCourseRequest) returns (DeleteCourseResponse);
+  rpc UploadVideo(UploadVideoRequest) returns (UploadVideoResponse);
+  rpc GetCourseVideos(GetCourseVideosRequest) returns (GetCourseVideosResponse);
+  rpc CreateChapter(CreateChapterRequest) returns (CreateChapterResponse);
+  // 管理员接口
+  rpc UpdateCourseStatus(UpdateCourseStatusRequest) returns (UpdateCourseStatusResponse);
+  rpc CreateCategory(CreateCategoryRequest) returns (CreateCategoryResponse);
+  rpc UpdateCategory(UpdateCategoryRequest) returns (UpdateCategoryResponse);
+  rpc DeleteCategory(DeleteCategoryRequest) returns (DeleteCategoryResponse);
+}
+
+message GetCourseListRequest {
+  int32 pageNum = 1;
+  int32 pageSize = 2;
+  int64 categoryId = 3;
+}
+
+message GetCourseListResponse {
+  int32 code = 1;
+  string message = 2;
+  repeated CourseInfo list = 3;
+  int64 total = 4;
+}
+
+message GetCourseDetailRequest {
+  int64 courseId = 1;
+}
+
+message GetCourseDetailResponse {
+  int32 code = 1;
+  string message = 2;
+  CourseDetail courseDetail = 3;
+}
+
+message GetCategoryTreeRequest {
+}
+
+message GetCategoryTreeResponse {
+  int32 code = 1;
+  string message = 2;
+  repeated CategoryInfo list = 3;
+}
+
+// 创建课程
+message CreateCourseRequest {
+  string title = 1;
+  string description = 2;
+  string coverUrl = 3;
+  double price = 4;
+  int64 categoryId = 5;
+  int64 teacherId = 6;
+}
+
+message CreateCourseResponse {
+  int32 code = 1;
+  string message = 2;
+  int64 courseId = 3;
+}
+
+// 更新课程
+message UpdateCourseRequest {
+  int64 courseId = 1;
+  string title = 2;
+  string description = 3;
+  string coverUrl = 4;
+  double price = 5;
+  int64 categoryId = 6;
+}
+
+message UpdateCourseResponse {
+  int32 code = 1;
+  string message = 2;
+}
+
+// 上传视频
+message UploadVideoRequest {
+  int64 courseId = 1;
+  string title = 2;
+  string videoUrl = 3;
+  int32 duration = 4;
+  int32 isFree = 5;
+  int64 chapterId = 6;
+}
+
+message UploadVideoResponse {
+  int32 code = 1;
+  string message = 2;
+  int64 videoId = 3;
+}
+
+// 获取课程视频列表
+message GetCourseVideosRequest {
+  int64 courseId = 1;
+}
+
+message GetCourseVideosResponse {
+  int32 code = 1;
+  string message = 2;
+  repeated VideoInfo videos = 3;
+}
+
+// 创建章节
+message CreateChapterRequest {
+  int64 courseId = 1;
+  string title = 2;
+  int32 sort = 3;
+}
+
+message CreateChapterResponse {
+  int32 code = 1;
+  string message = 2;
+  int64 chapterId = 3;
+}
+
+// 更新课程状态（管理员审核）
+message UpdateCourseStatusRequest {
+  int64 courseId = 1;
+  int32 status = 2;  // 0-待审核 1-已上架 2-已下架
+}
+
+message UpdateCourseStatusResponse {
+  int32 code = 1;
+  string message = 2;
+}
+
+// 分类管理
+message CreateCategoryRequest {
+  string name = 1;
+  int64 parentId = 2;
+  int32 sort = 3;
+}
+
+message CreateCategoryResponse {
+  int32 code = 1;
+  string message = 2;
+  int64 categoryId = 3;
+}
+
+message UpdateCategoryRequest {
+  int64 categoryId = 1;
+  string name = 2;
+  int32 sort = 3;
+}
+
+message UpdateCategoryResponse {
+  int32 code = 1;
+  string message = 2;
+}
+
+message DeleteCategoryRequest {
+  int64 categoryId = 1;
+}
+
+message DeleteCategoryResponse {
+  int32 code = 1;
+  string message = 2;
+}
+
+message CourseInfo {
+  int64 id = 1;
+  string title = 2;
+  string cover = 3;
+  string description = 4;
+  int64 categoryId = 5;
+  int64 teacherId = 6;
+  double price = 7;
+  double originalPrice = 8;
+  int32 studentCount = 9;
+  int32 lessonCount = 10;
+  int32 duration = 11;
+  int32 level = 12;
+  int32 status = 13;  // 0-待审核 1-已上架 2-已下架
+}
+
+message CourseDetail {
+  CourseInfo courseInfo = 1;
+  repeated ChapterInfo chapters = 2;
+  TeacherInfo teacher = 3;
+}
+
+message ChapterInfo {
+  int64 id = 1;
+  string title = 2;
+  int32 sort = 3;
+  repeated VideoInfo videos = 4;
+}
+
+message VideoInfo {
+  int64 id = 1;
+  string title = 2;
+  int32 duration = 3;
+  string videoUrl = 4;
+  string cover = 5;
+  int32 isFree = 6;
+}
+
+message TeacherInfo {
+  int64 id = 1;
+  string username = 2;
+  string nickname = 3;
+  string avatar = 4;
+}
+
+message CategoryInfo {
+  int64 id = 1;
+  string name = 2;
+  int64 parentId = 3;
+  repeated CategoryInfo children = 4;
+  int32 courseCount = 5;
+  int32 sort = 6;
+}
+
+// 删除课程
+message DeleteCourseRequest {
+  int64 courseId = 1;
+  int64 teacherId = 2;
+}
+
+message DeleteCourseResponse {
+  int32 code = 1;
+  string message = 2;
+}
+
+// 获取视频播放URL
+message GetVideoPlayURLRequest {
+  int64 videoId = 1;
+  int64 userId = 2;
+}
+
+message GetVideoPlayURLResponse {
+  int32 code = 1;
+  string message = 2;
+  string playUrl = 3;
+}

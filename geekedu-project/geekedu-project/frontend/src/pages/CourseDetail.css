@@ -1,0 +1,373 @@
+/* 课程详情页面 */
+.course-detail-layout {
+    min-height: 100vh;
+    background: #f5f7fa;
+}
+
+.course-detail-loading {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f5f7fa;
+}
+
+.loading-spinner {
+    font-size: 16px;
+    color: #666;
+}
+
+/* 面包屑导航 */
+.course-detail-breadcrumb {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 16px 24px;
+}
+
+.course-detail-breadcrumb .ant-breadcrumb-link {
+    cursor: pointer;
+}
+
+.course-detail-breadcrumb .ant-breadcrumb-link:hover {
+    color: #4f46e5;
+}
+
+/* 内容区域 */
+.course-detail-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px 48px;
+}
+
+/* 课程头部区域 */
+.course-header-section {
+    display: flex;
+    gap: 40px;
+    background: #fff;
+    padding: 32px;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    margin-bottom: 24px;
+}
+
+.course-cover-container {
+    position: relative;
+    width: 480px;
+    min-width: 480px;
+    height: 320px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #f3f4f6;
+}
+
+.course-main-cover {
+    width: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.course-free-badge {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: #fff;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.course-info-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.course-main-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0 0 16px;
+    line-height: 1.4;
+}
+
+.course-main-desc {
+    font-size: 15px;
+    color: #6b7280;
+    margin: 0 0 20px;
+    line-height: 1.6;
+    flex: 1;
+}
+
+.course-meta-row {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 16px;
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.meta-item .anticon {
+    color: #4f46e5;
+}
+
+.course-teacher-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding: 12px 16px;
+    background: #f9fafb;
+    border-radius: 8px;
+}
+
+.teacher-name {
+    font-size: 14px;
+    color: #374151;
+}
+
+.course-price-row {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.current-price {
+    font-size: 36px;
+    font-weight: 700;
+    color: #ef4444;
+}
+
+.original-price {
+    font-size: 18px;
+    color: #9ca3af;
+    text-decoration: line-through;
+}
+
+.free-price {
+    font-size: 32px;
+    font-weight: 700;
+    color: #10b981;
+}
+
+.course-action-row {
+    margin-top: auto;
+}
+
+.buy-btn {
+    height: 48px;
+    padding: 0 48px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    border: none;
+}
+
+.buy-btn:hover {
+    background: linear-gradient(135deg, #4338ca 0%, #6d28d9 100%);
+}
+
+.purchased-btn {
+    height: 48px;
+    padding: 0 48px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 8px;
+    background: #10b981;
+    border: none;
+}
+
+/* 课程内容区域 */
+.course-content-section {
+    margin-top: 24px;
+}
+
+.course-chapters-card {
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+.course-chapters-card .ant-card-head {
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.course-chapters-card .ant-card-head-title {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.chapters-collapse {
+    background: transparent;
+    border: none;
+}
+
+.chapters-collapse .ant-collapse-item {
+    border-bottom: 1px solid #f3f4f6;
+    margin-bottom: 0;
+}
+
+.chapters-collapse .ant-collapse-header {
+    padding: 16px 20px !important;
+    background: #fafbfc;
+}
+
+.chapter-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.chapter-index {
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    color: #fff;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.chapter-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1f2937;
+    flex: 1;
+}
+
+.chapter-count {
+    font-size: 13px;
+    color: #9ca3af;
+}
+
+.video-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px !important;
+    border-bottom: 1px solid #f9fafb;
+}
+
+.video-item:last-child {
+    border-bottom: none;
+}
+
+.video-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+}
+
+.video-index {
+    width: 28px;
+    height: 28px;
+    background: #f3f4f6;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 500;
+    color: #6b7280;
+}
+
+.video-title {
+    font-size: 14px;
+    color: #374151;
+}
+
+.video-duration {
+    font-size: 13px;
+    color: #9ca3af;
+    margin-left: auto;
+    margin-right: 16px;
+}
+
+.video-play-btn {
+    min-width: 110px;
+}
+
+.no-chapters {
+    text-align: center;
+    padding: 60px 20px;
+    color: #9ca3af;
+}
+
+.no-chapters p {
+    margin-top: 16px;
+}
+
+/* 视频模态框 */
+.video-modal .ant-modal-content {
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.video-modal-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+}
+
+.video-player-wrapper {
+    background: #000;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.video-player {
+    width: 100%;
+    max-height: 500px;
+    display: block;
+}
+
+.video-info-bar {
+    padding: 12px 16px;
+    background: #1f2937;
+    color: #9ca3af;
+    font-size: 12px;
+}
+
+/* 响应式布局 */
+@media (max-width: 992px) {
+    .course-header-section {
+        flex-direction: column;
+    }
+
+    .course-cover-container {
+        width: 100%;
+        min-width: auto;
+    }
+
+    .course-main-cover {
+        height: auto;
+        aspect-ratio: 16 / 9;
+    }
+}
+
+@media (max-width: 576px) {
+    .course-header-section {
+        padding: 20px;
+    }
+
+    .course-main-title {
+        font-size: 22px;
+    }
+
+    .current-price {
+        font-size: 28px;
+    }
+
+    .buy-btn {
+        width: 100%;
+    }
+}

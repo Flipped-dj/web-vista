@@ -1,0 +1,110 @@
+syntax = "proto3";
+
+package geekedu;
+option go_package = "./pb";
+
+// 用户服务
+service UserService {
+  rpc Register(RegisterRequest) returns (RegisterResponse);
+  rpc Login(LoginRequest) returns (LoginResponse);
+  rpc GetUserInfo(GetUserInfoRequest) returns (GetUserInfoResponse);
+  rpc UpdateProfile(UpdateProfileRequest) returns (UpdateProfileResponse);
+  rpc ChangePassword(ChangePasswordRequest) returns (ChangePasswordResponse);
+  // 管理员接口
+  rpc GetUserList(GetUserListRequest) returns (GetUserListResponse);
+  rpc UpdateUserRole(UpdateUserRoleRequest) returns (UpdateUserRoleResponse);
+}
+
+message RegisterRequest {
+  string username = 1;
+  string password = 2;
+  string nickname = 3;
+}
+
+message RegisterResponse {
+  int32 code = 1;
+  string message = 2;
+  int64 userId = 3;
+}
+
+message LoginRequest {
+  string username = 1;
+  string password = 2;
+}
+
+message LoginResponse {
+  int32 code = 1;
+  string message = 2;
+  string token = 3;
+  UserInfo userInfo = 4;
+}
+
+message GetUserInfoRequest {
+  int64 userId = 1;
+}
+
+message GetUserInfoResponse {
+  int32 code = 1;
+  string message = 2;
+  UserInfo userInfo = 3;
+}
+
+message UpdateProfileRequest {
+  int64 userId = 1;
+  string nickname = 2;
+  string avatar = 3;
+}
+
+message UpdateProfileResponse {
+  int32 code = 1;
+  string message = 2;
+}
+
+// 管理员获取用户列表
+message GetUserListRequest {
+  int32 page = 1;
+  int32 pageSize = 2;
+}
+
+message GetUserListResponse {
+  int32 code = 1;
+  string message = 2;
+  repeated UserInfo users = 3;
+  int64 total = 4;
+}
+
+// 管理员更新用户角色
+message UpdateUserRoleRequest {
+  int64 userId = 1;
+  int32 role = 2;  // 0-学员 1-讲师 2-管理员
+}
+
+message UpdateUserRoleResponse {
+  int32 code = 1;
+  string message = 2;
+}
+
+message UserInfo {
+  int64 id = 1;
+  string username = 2;
+  string nickname = 3;
+  string email = 4;
+  string mobile = 5;
+  string avatar = 6;
+  int32 gender = 7;
+  int32 role = 8;
+  double balance = 9;
+  string createdAt = 10;
+}
+
+// 修改密码
+message ChangePasswordRequest {
+  int64 userId = 1;
+  string oldPassword = 2;
+  string newPassword = 3;
+}
+
+message ChangePasswordResponse {
+  int32 code = 1;
+  string message = 2;
+}
